@@ -49,7 +49,7 @@ int main()
 	int macierz3[3][3];
 
 	macierz3[0][0] = macierz1[0][0]*macierz2[0][0] + macierz1[0][1]*macierz2[1][0] + macierz1[0][2] * macierz2[2][0];		
-	macierz3[0][1] = macierz1[0][0]*macierz2[1][1] + macierz1[0][1]*macierz2[1][1] + macierz1[0][2] * macierz2[2][1];
+	macierz3[0][1] = macierz1[0][0]*macierz2[0][1] + macierz1[0][1]*macierz2[1][1] + macierz1[0][2] * macierz2[2][1];
 	macierz3[0][2] = macierz1[0][0]*macierz2[0][2] + macierz1[0][1]*macierz2[1][2] + macierz1[0][2] * macierz2[2][2];
 	
 	macierz3[1][0] = macierz1[1][0]*macierz2[0][0] + macierz1[1][1]*macierz2[1][0] + macierz1[1][2] * macierz2[2][0];
@@ -62,12 +62,13 @@ int main()
 
 	FILE* file3;
 	file3 = fopen("macierz3.txt", "w");
-	fprintf(file3, "%d, %d, %d \n", macierz3[0][0], macierz3[0][1], macierz3[0][1]);
-	fprintf(file3, "%d, %d, %d \n", macierz3[1][0], macierz3[1][1], macierz3[1][1]);
-	fprintf(file3, "%d, %d, %d \n", macierz3[2][0], macierz3[2][1], macierz3[2][1]);
+	fprintf(file3, "%d, %d, %d \n", macierz3[0][0], macierz3[0][1], macierz3[0][2]);
+	fprintf(file3, "%d, %d, %d \n", macierz3[1][0], macierz3[1][1], macierz3[1][2]);
+	fprintf(file3, "%d, %d, %d \n", macierz3[2][0], macierz3[2][1], macierz3[2][2]);
 	fclose(file3);
 }
 
+tudent@debian:~/Dokumenty$ ./lab10cw1
 
 
 
