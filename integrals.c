@@ -9,15 +9,15 @@
 #define numberOfTestsMC 10000
 
 /*
-Projekt 1: ca³kowanie numeryczne
-Autor: Bart³omiej Kirejczyk, grupa 12, Informatyka
+Projekt 1: caè¶¾owanie numeryczne
+Autor: Barté€™miej Kirejczyk, grupa 12, Informatyka
 AiSD
 
-Pe³en opis i dokumantacja zosta³a z³o¿ona oddzielnie
+Peè²«n opis i dokumantacja zostaè±‰ zé€™ç©na oddzielnie
 */
 
 
-//ca³kowane funkcje
+//caè¶¾owane funkcje
 double f1(double x)
 {
 	return sin(x);
@@ -49,7 +49,7 @@ double randomDouble(double min, double max)
 }
 
 
-//funkcja definiuj¹ca maksimum w funkcji w badanym przedziale
+//funkcja definiujé‰a maksimum w funkcji w badanym przedziale
 double defineMAX(double (*f)(double x))
 {
 	double ff, x;
@@ -69,7 +69,7 @@ double defineMAX(double (*f)(double x))
 }
 
 
-//funkcja sprawdzaj¹ca, czy punkt nale¿y do funkcji
+//funkcja sprawdzajé‰a, czy punkt naleç¯¡ do funkcji
 int checkPoint(double x, double y, double (*f)(double x))
 {
 	int isNegative = 0;
@@ -89,7 +89,7 @@ int checkPoint(double x, double y, double (*f)(double x))
 }
 
 
-//zlicza ile losowych punktów znalaz³o siê w zakresie funkcji
+//zlicza ile losowych punkté—š znalazé€™ siï¿½ w zakresie funkcji
 int pointCounter(double min, double max, int n, double (*f)(double x))
 {	
 	int pointsInside = 0;
@@ -103,7 +103,7 @@ int pointCounter(double min, double max, int n, double (*f)(double x))
 }
 
 
-//dzia³anie licz¹ce wartoœc ca³ki
+//dziaè±‰nie liczé‰e wartoî¯Š caè¶¾i
 double resultCalculator(double min, double max, int pointsInside, int n)
 {
 	return ((max-min) * (fDo - fOd) * ((double)pointsInside/(double)n));
@@ -142,8 +142,8 @@ double methodMC(double (*function)(double x))
 //*** koniec metody MC***
 
 
-//*** metoda prostok¹tów ***
-//main metody prostok¹tów
+//*** metoda prostoké–é—š ***
+//main metody prostoké–é—š
 double methodRectangle(double (*function)(double x))
 {
 	double sum = 0;
@@ -158,12 +158,12 @@ double methodRectangle(double (*function)(double x))
 
 	return sum; 
 }
-//*** koniec metody prostok¹tów ***
+//*** koniec metody prostoké–é—š ***
 
 
-//*** metoda trapezów ***
+//*** metoda trapezé—š ***
 
-//main metody trapezów
+//main metody trapezé—š
 double methodTrapezoid(double (*function)(double x))
 {
 	double sum = 0;
@@ -181,7 +181,7 @@ double methodTrapezoid(double (*function)(double x))
 	return sum;
 }
 
-//*** koniec metody trapezów ***
+//*** koniec metody trapezé—š ***
 
 
 //testy
