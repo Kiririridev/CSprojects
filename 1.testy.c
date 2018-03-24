@@ -51,8 +51,7 @@ struct QuestionAnswer newQuestionAnswer()
 	scanf("%s", qA.answerB);
 	scanf("%s", qA.answerC);
 	scanf("%s", qA.correctAnswer);
-	//qA.correctAnswer = getch();
-	//fgets(&qA.question);
+
 	printfQA(&qA);
 	
 	char answer2[3];
@@ -67,7 +66,6 @@ struct QuestionAnswer newQuestionAnswer()
 //wczytuje QuestionAnswer z pliku file, zapisuje go w miejscu pamiêci dostarczonym w argumencie
 int readQuestionAnswer(FILE *file, struct QuestionAnswer *qa)
 {	
-	//fseek(file,0,0);
 	struct QuestionAnswer lqa = *qa;
 
 	fscanf(file, "%s %s %s %s %s", lqa.question, lqa.answerA, lqa.answerB, lqa.answerC, lqa.correctAnswer);
@@ -105,8 +103,7 @@ void askQuestion(struct QuestionAnswer *pqA)
 	
 	answer = getch();
 	
-	//if(!strcmp((char[])answer, qA.correctAnswer)) printf("suka blyac. good!");
-	if(answer == qA.correctAnswer[0]) printf("suka blyac. good!\n");
+	if(answer == qA.correctAnswer[0]) printf("cyka blyac. good!\n");
 	else printf("wrooooong\n");
 }
 
@@ -117,15 +114,13 @@ void takingTest()
 	FILE *file;
 	file = fopen("testy.txt", "r");
 	
-	//pogrzebany pies
+	
 	struct QuestionAnswer qa;
 	struct QuestionAnswer *pqa = &qa;
 	
 	do
-	{
-		//qa = readQuestionAnswer(file, pqa);
+	{	
 		readQuestionAnswer(file, pqa);
-		sleep(1);
 		askQuestion(&qa);
 		
 		printf("Another question? (YES(y)/NO(any key))\n");
@@ -135,25 +130,29 @@ void takingTest()
 	
 }
 
+//printf about
+void printfAbout()
+{
+	printf("Author: Bartlomiej Kirejczyk\n");
+	printf("Github: Kiririridev\n");
+	printf("Program is #1 assignment for Jay Raszka's classes.\n");
+	printf("Enjoy!\n");
+}
+
 //mainik
 int main()
 {
-//	FILE *file;
-//	*file = fopen("testy.txt", 'a+');
-	char answer[10];
+
+	char answer;
 	
 	while(1){
-		choosingMainMode:
-		printf("choose mode: (adding questions(A)/taking test(T))/quit(Q)\n");
-		sleep(1);
-		scanf("%s", answer);
-	
-		if(!strcmp(answer, "Q")) exit(0);
-		if(!strcmp(answer,"A") && !strcmp(answer,"T")) goto choosingMainMode;
-	
-		if(!strcmp(answer,"A")) addingQuestion();
-		else takingTest();
+		printf("choose mode: (adding questions(a)/taking test(t))/info(i)/quit(q)\n");
+		answer = getch();		
 		
+		if(answer =='q') exit(0);
+		if(answer == 'a') addingQuestion();
+		else if(answer == 't')takingTest();
+		else if(answer=='i') printfAbout();
 	}
 	return 0;
 }
