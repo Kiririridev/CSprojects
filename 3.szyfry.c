@@ -2,6 +2,9 @@
 #include<stdlib.h>
 #include<string.h>
 
+//coding message start
+
+//take message from keyboad
 void inputMessage(char *pMes)
 {
 	printf("Enter your Message: ");
@@ -10,6 +13,8 @@ void inputMessage(char *pMes)
 	
 }
 
+
+//take key from keyboard (dynamic allocation)
 void inputKey(int *pKey, int *pkeyLength)
 {
 	
@@ -42,21 +47,46 @@ void inputKey(int *pKey, int *pkeyLength)
 	}
 }
 
-
+//main for coding input message
 int main()
 {
 	char message[256];
+	char codedMessage[256];
 	int *pKey;
 	int keyLength = 0;
 	int *pkeyLength = &keyLength;
 	size_t size = 100;  
 	pKey = (int *)malloc(32);
 	char *pMes = &message[0]; 
-	
+	int staticKey[keyLength];
+	int i = 0;
+
 	
 	inputMessage(pMes);
 	printf("test main: %s", message);
 	
-	inputKey(pKey, pkeyLength);	
+	inputKey(pKey, pkeyLength);
+	
+		
+	for(i = 0; i<keyLength; i++)
+	{
+		staticKey[i] = *(pKey + i);
 	}
+	
+	for(i = 0; i<keyLength; i++)
+	{
+		printf("key: %d", staticKey[i]);
+	}
+	
+	
+	for(i = 0; i<(strlen(message)-1); i++)
+	{
+		codedMessage[i] = message[(i+staticKey[i%keyLength])%(strlen(message)-1)];
+	}
+	
+	printf("coded message: %s", codedMessage);
+	
+	
+}
+
 
