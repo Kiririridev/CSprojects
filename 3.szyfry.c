@@ -1,12 +1,15 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#include<conio.h>
+#include<unistd.h>
 
 //coding message start
 
 //take message from keyboad
 void inputMessage(char *pMes)
-{
+{	
+	fflush(stdin);
 	printf("Enter your Message: ");
 	fgets(pMes, 256, stdin);
 	printf("test InputMessage: %s\n", pMes);
@@ -19,8 +22,8 @@ void inputKey(int *pKey, int *pkeyLength)
 {
 	
 	int taker;	
-	int i = *pkeyLength;
-	printf("Enter key and finish it with 255): ");
+	int i = 0;
+	printf("Enter key and finish it with 255: ");
 	
 	
 	while(1)
@@ -28,24 +31,31 @@ void inputKey(int *pKey, int *pkeyLength)
 		
 		scanf("%d", &taker); 
 		
-		if(taker == 255) break;
+		if(taker == 255 || i == 10) break;
 		else
 		{
 			*(pKey+i) = taker;
 		}
 		i++;
+
 	}
 	
 	*pkeyLength = i;
 	
+	/*
 	int n = 0;
 	for(n = 0; n<i; n++)
 	{
 		printf("%d\n", *(pKey+n));
 		
 	}
+	*/
+	
+	
 }
 
+
+/*
 void codeMessageOld(char message[256], char *pCMes, int *pKey, int keyLength)
 {
 	int staticKey[keyLength];
@@ -69,21 +79,26 @@ void codeMessageOld(char message[256], char *pCMes, int *pKey, int keyLength)
 		
 	}
 }
+*/
 
-void codeMessage(char message[256], char *pCMes, int *pKey, int keyLength)
+//kodowanie wiadomosci
+//przekazanie ca³ej tablicy jako parametr (zamiast przekazania wskaŸnika) sprawia, ¿e nie musimy przekazaæ oddzielnie wskaŸnika do tablicy oraz jej d³ugoœci
+//dla odmiany tablica kluczy jest przekazywana jako wskaŸnik do pierwszego elementu oraz d³ugoœæ tablicy jako wartosc
+void codeMessage(char message[256], char *pCodedMessage, int *pKey, int keyLength)
 {
 	int i = 0;
 	
-	for(i = 0; i <strlen(message)-1; i++)
+	for(i = 0; i<(int)strlen(message)-1; i++)
 	{
-		*(pCMes + i) = message[i] + *(pKey+(i%keyLength));
+		*(pCodedMessage + i) = message[i] + *(pKey+(i%keyLength));
 	}
 }
 
 
 
+
 //main for coding input message
-int mainCodeMessage()
+void mainCodeMessage()
 {
 	printf("Coding\n");
 	char message[256];
@@ -92,20 +107,19 @@ int mainCodeMessage()
 	int *pKey;
 	int keyLength = 0;
 	int *pKeyLength = &keyLength;
-	size_t size = 100;  
-	pKey = (int *)malloc(32);
+
+	pKey = (int *)malloc(40);
 	
-	char *pMes = &message[0];
-	char *pCMes = &codedMessage[0]; 
-	int staticKey[keyLength];
-	int i = 0;
+	char *pMessage = &message[0];
+	char *pCodedMessage = &codedMessage[0]; 
+
+
 
 	
 	
-	
-	inputMessage(pMes);
+	inputMessage(pMessage);
 	inputKey(pKey, pKeyLength);
-	codeMessage(message, pCMes, pKey, keyLength);
+	codeMessage(message, pCodedMessage, pKey, keyLength);
 
 	
 	printf("Coded message in main: %s\n", codedMessage);
@@ -113,15 +127,16 @@ int mainCodeMessage()
 	
 }
 
-void inputCodedMessage(char *pCMes)
+void inputCodedMessage(char *pCodedMessage)
 {
 	fflush(stdin);
 	printf("Enter your Message:");
-	fgets(pCMes, 256, stdin);
-	printf("InputCodedMessage: %s\n", pCMes);
+	fgets(pCodedMessage, 256, stdin);
+	printf("InputCodedMessage: %s\n", pCodedMessage);
 	
 }
 
+/*
 void uncodeMessageOld(char codedMessage[256], char *pMes, int *pKey, int keyLength)
 {
 	
@@ -158,42 +173,45 @@ void uncodeMessageOld(char codedMessage[256], char *pMes, int *pKey, int keyLeng
 	printf("in uncode: %s\n", message);
 }
 
-void uncodeMessage(char codedMessage[256], char *pMes, int *pKey, int keyLength)
+*/
+
+void uncodeMessage(char codedMessage[256], char *pMessage, int *pKey, int keyLength)
 {
 	int i = 0;
 	
-	for(i = 0; i <strlen(codedMessage)-1; i++)
+	for(i = 0; i<(int)strlen(codedMessage)-1; i++)
 	{
-		*(pMes + i) = codedMessage[i] - *(pKey+(i%keyLength));
+		*(pMessage + i) = codedMessage[i] - *(pKey+(i%keyLength));
 	}
 }
 
-int mainUncodeMessage()
+void mainUncodeMessage()
 {
 	printf("Uncoding\n");
 	char codedMessage[256];
 	char message[256];
 	
-	char *pCMes = &codedMessage[0];
-	char *pMes = &message[0];
+	char *pCodedMessage = &codedMessage[0];
+	char *pMessage = &message[0];
 	
-	int key[10];
-	int *pKey = &key[0];
+
+	int *pKey;
+	pKey = (int *)malloc(40);
 	int keyLength;
 	int *pKeyLength = &keyLength;
 	
-	inputCodedMessage(pCMes);
+	inputCodedMessage(pCodedMessage);
 	inputKey(pKey, pKeyLength);
 	
-	uncodeMessage(codedMessage, pMes, pKey, keyLength);
+	uncodeMessage(codedMessage, pMessage, pKey, keyLength);
 	
-	printf("\n%s", pMes);
+	printf("%s\n", pMessage);
 }
 
 int main()
 {	
 
-	char czarik = getch();
+	char czarik;
 	
 	loopLabel:
 	
