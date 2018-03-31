@@ -1,7 +1,14 @@
 #include<stdio.h>
+#include<stdlib.h>
 #include<string.h>
 
 #define DICTIONARY_SIZE 25
+
+/*
+
+Pies jest pogrzebany pomiêdzy funkcj¹ ³api¹c¹ frazy w Morsie, a t³umaczem frazy na litere
+
+*/
 
 struct morseLetterPair
 {
@@ -11,6 +18,7 @@ struct morseLetterPair
 
 void loadDictionary(struct morseLetterPair *alphabet)
 {
+	
 	(*alphabet).letter = 'a';
 	strncpy((*alphabet).morse, ".-", 4);
 	
@@ -85,6 +93,8 @@ void loadDictionary(struct morseLetterPair *alphabet)
 	
 	(*(alphabet+24)).letter = 'z';
 	strncpy((*(alphabet+24)).morse, "--..", 4);
+	
+	/*
 	printf("dictionary in func:\n");
 	int i = 0;
 	for(i = 0; i<25; i++)
@@ -92,6 +102,7 @@ void loadDictionary(struct morseLetterPair *alphabet)
 		printf("%d, %c, %s\n", i, (*(alphabet+i)).letter, (*(alphabet+i)).morse);
 	}
 	printf("end of dic in func\n");
+	*/
 }
 
 void translate(char *message, struct morseLetterPair *pDictionary, int messageLength)
@@ -104,20 +115,19 @@ void translate(char *message, struct morseLetterPair *pDictionary, int messageLe
 		singleSign = *(message + j);  
 		for(i = 0;i<DICTIONARY_SIZE; i++)
 		{	
-			if(singleSign==(*(pDictionary+i)).letter) printf("%s", (*(pDictionary + i)).morse);
+			if(singleSign==(*(pDictionary+i)).letter) printf("%s ", (*(pDictionary + i)).morse);
 	
 		}
 	}
 }
 
-
-int main(void)
+void mainMnemoToMorse(void)
 {
-	printf("Program kodujacy i dekodujacy alfabet Morse'a.\nWprowadz wiadomosc\n");
+	printf("Wprowadz wiadomosc\n");
 	
 	char message[256];
 	char *pMessage = &message[0];
-	int i = 0;
+//	int i = 0;
 	
 	scanf("%s", message);
 	printf("%s\n", message);
@@ -126,15 +136,103 @@ int main(void)
 	struct morseLetterPair *pDictionary = &dictionary[0];
 	
 	loadDictionary(pDictionary);
-	
+/*	
 	for(i = 0; i<25; i++)
 	{
 		printf("%d,   %c    ", i, dictionary[i].letter);
 		printf("%s\n", dictionary[i].morse);
 	}
+*/	
+	translate(pMessage, pDictionary, strlen(message));	
+
+}
+
+void translateWord(char *superWord, int wordLength, struct morseLetterPair *pDictionary)
+{
+	char word[wordLength+1];
 	
-	translate(pMessage, pDictionary, strlen(message));
+	int i =0;
+	for(i=0;i<wordLength; i++)
+	{
+		word[i] = *(superWord + i);
+	}
 	
+	for(i = 0;i<(int)strlen(word); i++)
+	{
+		printf("s1: %s. s2: %s, compRes: %d\n", word, (*(pDictionary + i)).morse, strcmp(word,(*(pDictionary + i)).morse));
+		if(strcmp(word,(*(pDictionary + i)).morse)==0)
+		{
+			printf("fineletter: %c\n", (*(pDictionary + i)).letter);
+			return;
+		}else
+		{
+			//printf("s1: %s. s2: %s, compRes: %d\n", word, (*(pDictionary + i)).morse, strcmp(word,(*(pDictionary + i)).morse));
+		}
+	}
+}
+
+void translateToMnemo(char morseMessage[256])
+{
+	char word[20];
+	char taker;
+	struct morseLetterPair dictionary[DICTIONARY_SIZE];
+	struct morseLetterPair *pDictionary = &dictionary[0];
+	loadDictionary(pDictionary);
 	
-	return 0;
+	int i = 0, w = 0;
+	
+	for(i = 0; i<(int)strlen(morseMessage); i++)
+	{
+		taker = morseMessage[i];
+		if(taker=='-' || taker=='.')
+		{
+			word[w] = taker;
+			w++;
+		}else
+		{
+			printf("word: %s\n", word);
+			translateWord(word, w, pDictionary);
+			w=0;
+			strncpy(word, "", 20);
+			word[0] = '\0';
+			word[1] = '\0';
+			word[2] = '\0';
+			word[3] = '\0';
+		}
+	}
+}
+
+void mainMorseToMnemo(void)
+{
+	printf("Wprowadz wiadomosc w alfabecie Morse'a. Zakoncz ja zerem.\n");
+	char morseMessage[256];
+	char czarik;
+	//char *pMorseMessage[0];
+	
+	int i = 0;
+	while(1)
+	{
+		czarik = getchar();
+		if(czarik == '0') break;
+		else
+		{
+			morseMessage[i] = czarik;
+			i++;
+		}
+	}
+	
+	printf("%s\n", morseMessage);
+	
+	translateToMnemo(morseMessage);
+}
+
+int main()
+{
+	printf("Program kodujacy i dekodujacy alfabet Morse'a\n");
+	
+//	mainMnemoToMorse();
+
+	mainMorseToMnemo();
+	
+	return 0;	
 }
