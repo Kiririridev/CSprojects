@@ -5,12 +5,17 @@
 #define DICTIONARY_SIZE 25
 
 
+//struct that holds pair: letter from our alphabet and a morse code for that letter
 struct morseLetterPair
 {
 	char letter;
 	char morse[5];
 };
 
+
+//function that loads Morse code dictionary. defined variable DICTIONARY_SIZE hold amount of space you need to prepare
+//if you allocate memory dynamically, you need 6 bytes for every copy of struct morseLetterPair (6 * DICTIONARY_SIZE bytes)
+//if you add another symbols to this function remember to change defined variable
 void loadDictionary(struct morseLetterPair *alphabet)
 {
 	
@@ -90,43 +95,66 @@ void loadDictionary(struct morseLetterPair *alphabet)
 	strncpy((*(alphabet+24)).morse, "--..", 5);
 }
 
-void translate(char *message, struct morseLetterPair *pDictionary, int messageLength)
+
+//function that translates message to Morse Code symbol by symbol
+//it takes from arguments: pointer to first char of message, messageLength, pointer to string for coded message and pointer to dictionary from super function
+//how it works: it takes single char from message and iterates through the dictionary, comparing taken char with char in dictionary
+//when it matches, it concats morse code into string via pointer to coded message.
+//it iterates like this for every symbol in message
+void translate(char *message, int messageLength, char *pMorseMessage, struct morseLetterPair *pDictionary)
 {
 	int i = 0, j = 0;
 	char singleSign;
 	printf("translation: \n");
-	for( j = 0; j<messageLength; j++){
+	for(j = 0; j<messageLength; j++){
 		
 		singleSign = *(message + j);  
 		for(i = 0;i<DICTIONARY_SIZE; i++)
 		{	
-			if(singleSign==(*(pDictionary+i)).letter) printf("%s ", (*(pDictionary + i)).morse);
-	
+			if(singleSign==(*(pDictionary+i)).letter)
+			{
+				printf("%s ", (*(pDictionary + i)).morse);
+				strcat(pMorseMessage, (*(pDictionary + i)).morse);
+				strcat(pMorseMessage, " ");
+				
+			}
 		}
 	}
 }
 
-void mainMnemoToMorse(void)
+
+//main function for translating to Morse Code
+//function takes in the string that we have to translate to morse Code. right now it supports only lower case letters, no spaces, no other symbols.
+//it prepares space for message, coded message, dictionary and creates pointers to these. Then it asks user for input.
+//Later the morse dictionary is loaded via loadDictionary(). Then we call function translate() that translates every symbol in message and saves result in space
+//provided via pointer
+void mainToMorse(void)
 {
 	printf("Wprowadz wiadomosc\n");
 	
 	char message[256];
 	char *pMessage = &message[0];
-
+	char morseMessage[256] = "";
+	char *pMorseMessage = &morseMessage[0];
+	
+	struct morseLetterPair dictionary[DICTIONARY_SIZE];
+	struct morseLetterPair *pDictionary = &dictionary[0];
 	
 	scanf("%s", message);
 	printf("%s\n", message);
 
-	struct morseLetterPair dictionary[30];
-	struct morseLetterPair *pDictionary = &dictionary[0];
+	
 	
 	loadDictionary(pDictionary);
 	
-	translate(pMessage, pDictionary, strlen(message));	
+	translate(pMessage, strlen(message), pMorseMessage , pDictionary);	
+	
+	printf("Message in Morse Code: %s", morseMessage);
 
 }
 
-char translateWord(char *superWord, int wordLength, struct morseLetterPair *pDictionary)
+//
+char translateLetterFromMorse(char *superWord, int wordLength, struct morseLetterPair *pDictionary)
 {
 	printf("translateWord argument: %s, %d\n", superWord, wordLength);
 	char word[wordLength];
@@ -172,7 +200,7 @@ void translateToMnemo(char morseMessage[256])
 		}else
 		{
 			printf("word: %s\n", word);
-			decodedMessage[dM] = translateWord(word, w, pDictionary);
+			decodedMessage[dM] = translateLetterFromMorse(word, w, pDictionary);
 			dM++;
 			w=0;
 			strncpy(word, "", 20);
@@ -207,8 +235,11 @@ void mainMorseToMnemo(void)
 	translateToMnemo(morseMessage);
 }
 
+
+
 int main()
 {
+	
 	char czarik;
 	printf("Program kodujacy i dekodujacy alfabet Morse'a\n");
 	
@@ -217,7 +248,7 @@ int main()
 	
 	czarik = getch();
 	
-	if(czarik == 'k') mainMnemoToMorse();
+	if(czarik == 'k') mainToMorse();
 	else
 	{
 		if(czarik == 'd') mainMorseToMnemo();
@@ -226,5 +257,6 @@ int main()
 		}
 	}	
 	
+
 	return 0;	
 }
