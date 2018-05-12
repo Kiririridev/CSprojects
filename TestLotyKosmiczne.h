@@ -7,7 +7,7 @@
 
 struct Planet
 {
-	char name[6]; 
+	char name[7]; 
 	
 	//Coordinates
 	int cordX;
@@ -92,21 +92,66 @@ void testCreatePlanet(void funcCreatePlanet(struct Planet*, char* pNameTable), c
 	}
 }
 
+//PASSED
 void testCreateGalaxy(void funcCreateGalaxy(struct Planet*, char*), char* pNameTable, struct Planet* pPlanetList)
 {
-	int i = 0;
+	
 	printf("\ntestCreateGalaxy:\n");
 	funcCreateGalaxy(pPlanetList, pNameTable);
 	struct Planet planet; 
 	
+	int i = 0;
 	for(i = 0; i<10; i++)
 	{
-		planet = (*(pPlanetList + (i * sizeof(struct Planet))));
-		printf("PlanetName: %s, cordX: %d, cordY: %d, cordZ: %d, isGas: %u\n", planet.name, planet.cordX, planet.cordY, planet.cordZ, planet.isGas);
+		planet = *(pPlanetList + (i * sizeof(struct Planet)));
+		printf("PlanetName: %.6s, cordX: %d, cordY: %d, cordZ: %d, isGas: %u\n", planet.name, planet.cordX, planet.cordY, planet.cordZ, planet.isGas);
 	}
 }
+
+
+//PASSED
+void testGetUserCoords(void funcGetUserCoords(int*), int* pUserCoords)
+{
+	printf("\ntestGetUserCoords:\n");
 	
 
 
+	funcGetUserCoords(pUserCoords);
+	
+	printf("\nStart: %dX, %dY, %dZ, End: %dX, %dY, %dZ", *pUserCoords, *(pUserCoords+1), *(pUserCoords+2), *(pUserCoords+3), *(pUserCoords+4), *(pUserCoords+5));
+}
 
+void testGeneratePathway(void funcGeneratePathway(int*, int, float*), int* pUserCoords, float* pPathway)
+{
+	printf("\ntestGeneratePathway:\n");
+		
+	funcGeneratePathway(pUserCoords, 10, pPathway);
+	
+	int i = 0;
+	for(i = 0; i<10; i++)
+	{
+		printf("Point %d: %.2fX, %.2fY, %.2fZ\n", i, *(pPathway + (i * 3)), *(pPathway + (i * 3) + 1), *(pPathway + (i * 3) + 2));
+	}
+}
 
+void testCheckPathway(void funcCheckPathway(float* , int , struct Planet* ), float* pPathway, int amountOfPoints, struct Planet* pPlanetTable)
+{
+	printf("\ntestCheckPathway\n");
+	
+	funcCheckPathway(pPathway, amountOfPoints, pPlanetTable);
+}
+
+void testCheckPlanetOnPath(void funcCheckPlanetOnPath(float, float, float, struct Planet*, float))
+{
+	printf("\ncheckPlanetOnPath\n");
+	
+	struct Planet planet;
+	planet.cordX = 15;
+	planet.cordY = 15;
+	planet.cordZ = 15;
+	planet.isGas = 0;
+	struct Planet* pPlanet = &planet;
+	
+	funcCheckPlanetOnPath(12.0, 12.0, 12.0, pPlanet, 6.0);
+	
+}
