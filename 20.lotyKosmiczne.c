@@ -13,8 +13,21 @@ extern void testCreatePlanet(void (*funcCreatePlanet)(struct Planet*, char* pNam
 extern void testCreateGalaxy(void funcCreateGalaxy(struct Planet*, char*), char* pNameTable, struct Planet* pPlanetList);
 extern void testGetUserCoords(void funcGetUserCoords(int*), int* pUserCoords);
 extern void testGeneratePathway(void funcGeneratePathway(int*, int, float*), int* pUserCoords, float* pPathway);
-extern void testCheckPathway(void funcCheckPathway(float* , int , struct Planet* ), float* pPathway, int amountOfPoints, struct Planet* pPlanetTable);
-extern void testCheckPlanetOnPath(void funcCheckPlanetOnPath(float, float, float, struct Planet*, float));
+extern void testCheckPathway(void funcCheckPathway(float[][3] , int , struct Planet* ), float pathway[][3], int amountOfPoints, struct Planet* pPlanetTable);
+extern void testCheckPlanetOnPath(int funcCheckPlanetOnPath(float, float, float, struct Planet*, float));
+
+
+int randomInteger(int from, int to);
+void nameTableInitializator(char* pNameTable);
+void nameTableInitializator(char* pNameTable);
+void nameGenerator(char* pName, char* pNameTable);
+void createPlanet(struct Planet* pPlanet, char* pNameTable);
+void createGalaxy(struct Planet* pPlanetTable, char* pNameTable);
+void getUserCoords(int* userCoords);
+void generatePathway(int *userCoords, int amountOfPoints, float* pPathWay);
+void checkPathway(float pathway[][3], int amountOfPoints, struct Planet* pPlanetTable);
+int checkPlanetOnPath(float pathwayX, float pathwayY, float pathwayZ, struct Planet* planet, float safeDistance);
+
 
 /*
 *Generator liczb losowych w zakresie [from, to)
@@ -134,7 +147,15 @@ void getUserCoords(int* userCoords)
 	printf("\nKoordynaty przyjeto.");
 }
 
-
+/*
+*Metoda tworzy droge po jakiej porusza sie statek. Dzieli odleglosc pomiedzy punktem docelowym i startowym na punkty.
+*Ilosc punktow rowna jest parametrowi amountOfPoints.
+*Nastepnie kolejne funkcje beda sprawdzac odleglosci tych punktwo od poszczegolnych planet.
+*
+*@param userCoords - wskaznik do szescioelementowej tablicy zawierajacej koordynaty startowe i docelowe
+*@param amountOfPoints - parametr decydujacy o tym ile punktow zostanie wygenerowane
+*@param pPathWay - tablica o wymiarach [amountOfPoints][3] w ktorej zapisywane sa punkty 
+*/
 void generatePathway(int *userCoords, int amountOfPoints, float* pPathWay)
 {
 	float dX = (*(userCoords+3) - *userCoords )/amountOfPoints;
@@ -150,23 +171,51 @@ void generatePathway(int *userCoords, int amountOfPoints, float* pPathWay)
 	}
 }
 
-void checkPathway(float* pPathway, int amountOfPoints, struct Planet* pPlanetTable)
+
+/*
+*Glowna funkcja sprawadzajaca uruchamiajaca funkcje sprawdzajaca poszczegolne pary punkt - planeta.
+*Funkcja zbiera wyniki i generuje komunikaty o tym czy planeta zagraza nam czy nie
+*
+*@param pathway - tablica zawierajaca wszystkie punkty trasy
+*@param amountOfPoints - ilosc punktow trasy
+*@param wskaznik do tablicy z planetami
+*/
+void checkPathway(float pathway[][3], int amountOfPoints, struct Planet* pPlanetTable)
 {
 	
 	int i = 0;
 	int j =0;
-	for(i=0; i<amountOfPoints; i++)
+	int flag = 0;
+	for(j=0; j<10; j++)
 	{	
-		printf("Pokonany dystans: %.2f %%\n",  100 *  ((float)i / (float)amountOfPoints));
-		for(j = 0; j<10; j++)
+		//printf("Pokonany dystans: %.2f %%\n",  100 *  ((float)j / (float)amountOfPoints));
+		for(i = 0; i<amountOfPoints; i++)
 		{
-			checkPlanetOnPath(*(pPathway + (j * 3 * sizeof(float))), *(pPathway + (j * 3  + 1) * sizeof(float)), *(pPathway + (j * 3 + 2) * sizeof(float)), *(pPlanetTable + sizeof(struct Planet) * j), 5.0f);
+			if(checkPlanetOnPath(pathway[i][0], pathway[i][1], pathway[i][2], (pPlanetTable + sizeof(struct Planet) * j), 30.0)==1) flag = 1;
+			
+			if(j==i && flag == 1)
+		{
+			printf("Grozi nam zderzenie z planeta %.6s", (*(pPlanetTable + sizeof(struct Planet) * j)).name);
+				if((*(pPlanetTable + sizeof(struct Planet) * j)).isGas==1) printf(" ale jest to planeta gazowa, wiec spoko.\n");
+				else printf(".\n");
 		}
+		}
+		
+		
 	}
 	
 }
 
-void checkPlanetOnPath(float pathwayX, float pathwayY, float pathwayZ, struct Planet* planet, float safeDistance)
+
+/*
+*Funkcja sprawdzajaca odleglosc pomiedzy planeta, a danym punktem. Jesli odleglosc jest mniejsza niz bezpieczny dystans okreslony w parametrze, funkcja zwraca jeden.
+*Jezeli odleglosc jest bezpieczna, funkcja zwraca 0. 
+*
+*@param pathwayX, Y, Z - koordynaty danego punktu
+*@param planet - wskaznik do konkretnej planety
+*@param safeDistance - okresla bezpieczny dystans
+*/
+int checkPlanetOnPath(float pathwayX, float pathwayY, float pathwayZ, struct Planet* planet, float safeDistance)
 {
 	float distance = sqrtf(powf(((pathwayX - (float) (*(planet)).cordX)), 2) + powf(((pathwayY-(float) (*(planet)).cordY)),2) + powf(((pathwayZ-(float) (*(planet)).cordZ)),2));
 	float distanceX = powf(((pathwayX - (float) (*(planet)).cordX)), 2);
@@ -176,15 +225,14 @@ void checkPlanetOnPath(float pathwayX, float pathwayY, float pathwayZ, struct Pl
 	distance = distanceX + distanceY + distanceZ;
 	distance = sqrt(distance);
 	
-	printf("pX: %f, pY: %f, pZ: %f\n", pathwayX, pathwayY, pathwayZ);
-	printf("distance: %.2f, distX: %.2f, distY: %.2f, distZ: %.2f\n", distance, distanceX, distanceY, distanceZ);
+	//printf("pX: %f, pY: %f, pZ: %f\n", pathwayX, pathwayY, pathwayZ);
+	//printf("distance: %.2f, distX: %.2f, distY: %.2f, distZ: %.2f\n", distance, distanceX, distanceY, distanceZ);
 	
 	if(distance<=safeDistance)
 	{
-		printf("Uwaga, jesteœmy niebezpiecznie blisko planety %6s ", (*(planet)).name);
-		if((*(planet)).isGas == 1) printf("ale jest gazowa");
-		printf(".\n");
-	}
+
+		return 1;
+	} else return 0;
 }
 
 
@@ -208,8 +256,8 @@ void testy()
 	void (*funcCreateGalaxy)(struct Planet*, char* pNameTable) = &createGalaxy;
 	void (*funcGetUserCoords)(int*) = &getUserCoords;
 	void (*funcGeneratePathway)(int*, int, float*) = &generatePathway;
-	void (*funcCheckPathway)(float* , int , struct Planet* ) = &checkPathway;
-	void (*funcCheckPlanetOnPath)(float, float, float, struct Planet*, float) = &checkPlanetOnPath;
+	void (*funcCheckPathway)(float[][3] , int , struct Planet* ) = &checkPathway;
+	int (*funcCheckPlanetOnPath)(float, float, float, struct Planet*, float) = &checkPlanetOnPath;
 	
 	
 	char *pNameTable = malloc (10 * 2 * sizeof(char));
@@ -231,7 +279,7 @@ void testy()
 	testCreateGalaxy(funcCreateGalaxy, pNameTable, pPlanetList);
 	testGetUserCoords(funcGetUserCoords, pUserCoords);
 	testGeneratePathway(funcGeneratePathway, pUserCoords, pPathway);
-	testCheckPathway(funcCheckPathway, pPathway, amountOfPoints, pPlanetList);
+	testCheckPathway(funcCheckPathway, pathway, amountOfPoints, pPlanetList);
 	testCheckPlanetOnPath(funcCheckPlanetOnPath);
 	
 	free(pNameTable);

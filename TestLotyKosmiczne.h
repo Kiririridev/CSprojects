@@ -134,14 +134,14 @@ void testGeneratePathway(void funcGeneratePathway(int*, int, float*), int* pUser
 	}
 }
 
-void testCheckPathway(void funcCheckPathway(float* , int , struct Planet* ), float* pPathway, int amountOfPoints, struct Planet* pPlanetTable)
+void testCheckPathway(void funcCheckPathway(float[][3] , int , struct Planet* ), float pathway[][3], int amountOfPoints, struct Planet* pPlanetTable)
 {
 	printf("\ntestCheckPathway\n");
 	
-	funcCheckPathway(pPathway, amountOfPoints, pPlanetTable);
+	funcCheckPathway(pathway, amountOfPoints, pPlanetTable);
 }
 
-void testCheckPlanetOnPath(void funcCheckPlanetOnPath(float, float, float, struct Planet*, float))
+void testCheckPlanetOnPath(int funcCheckPlanetOnPath(float, float, float, struct Planet*, float))
 {
 	printf("\ncheckPlanetOnPath\n");
 	
@@ -151,6 +151,7 @@ void testCheckPlanetOnPath(void funcCheckPlanetOnPath(float, float, float, struc
 	planet.cordZ = 15;
 	planet.isGas = 0;
 	struct Planet* pPlanet = &planet;
+	float flo = 6.0;
 	
 	funcCheckPlanetOnPath(12.0, 12.0, 12.0, pPlanet, 6.0);
 	
