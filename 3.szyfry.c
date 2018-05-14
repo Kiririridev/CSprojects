@@ -12,7 +12,7 @@ void inputMessage(char *pMes)
 	fflush(stdin);
 	printf("Enter your Message: ");
 	fgets(pMes, 256, stdin);
-	printf("test InputMessage: %s\n", pMes);
+	//printf("test InputMessage: %s\n", pMes);
 	
 }
 
@@ -41,45 +41,10 @@ void inputKey(int *pKey, int *pkeyLength)
 	}
 	
 	*pkeyLength = i;
-	
-	/*
-	int n = 0;
-	for(n = 0; n<i; n++)
-	{
-		printf("%d\n", *(pKey+n));
-		
-	}
-	*/
-	
-	
+
 }
 
 
-/*
-void codeMessageOld(char message[256], char *pCMes, int *pKey, int keyLength)
-{
-	int staticKey[keyLength];
-	int i = 0;
-	
-	for(i = 0; i<keyLength; i++)
-	{
-		staticKey[i] = *(pKey + i);
-	}
-	
-	printf("key: ");
-	for(i = 0; i<keyLength; i++)
-	{
-		printf(" %d ", staticKey[i]);
-	}printf("\n");
-	
-
-	for(i = 0; i<(strlen(message)-1); i++)
-	{		
-		*(pCMes + i) = message[(i+staticKey[i%keyLength])%(strlen(message)-1)];
-		
-	}
-}
-*/
 
 //kodowanie wiadomosci
 //przekazanie ca³ej tablicy jako parametr (zamiast przekazania wskaŸnika) sprawia, ¿e nie musimy przekazaæ oddzielnie wskaŸnika do tablicy oraz jej d³ugoœci
@@ -132,48 +97,9 @@ void inputCodedMessage(char *pCodedMessage)
 	fflush(stdin);
 	printf("Enter your Message:");
 	fgets(pCodedMessage, 256, stdin);
-	printf("InputCodedMessage: %s\n", pCodedMessage);
+	//printf("InputCodedMessage: %s\n", pCodedMessage);
 	
 }
-
-/*
-void uncodeMessageOld(char codedMessage[256], char *pMes, int *pKey, int keyLength)
-{
-	
-	char message[256];
-	int i = 0;
-	int staticKey[10];
-	
-	
-	for(i = 0; i<keyLength; i++)
-	{
-		staticKey[i] = *(pKey + i);
-	}
-	
-
-	
-	printf("key: ");
-	for(i = 0; i<keyLength; i++)
-	{
-		printf(" %d ", staticKey[i]);
-	}printf("\n");
-	
-
-	int celM;
-	
-	for(i = 0; i<strlen(codedMessage)-1; i++)
-	{
-
-		celM = (i+staticKey[i%3])%6;
-		message[celM] = codedMessage[i];
-			
-	}
-		
-	printf("in uncode: %s\n", codedMessage);
-	printf("in uncode: %s\n", message);
-}
-
-*/
 
 void uncodeMessage(char codedMessage[256], char *pMessage, int *pKey, int keyLength)
 {
@@ -208,21 +134,26 @@ void mainUncodeMessage()
 	printf("%s\n", pMessage);
 }
 
+
+
 int main()
 {	
 
 	char czarik;
 	
-	loopLabel:
+	//loopLabel:
 	
-	printf("coding(c)/uncoding(u)?\n");
-	czarik = getch();
-	
-	if(czarik=='c')mainCodeMessage();
-	if(czarik=='u')mainUncodeMessage();
-	czarik = ' ';
-	sleep(1);
-	goto loopLabel;
+	while(czarik != 'c' || czarik != 'u' )
+	{
+		printf("coding(c)/uncoding(u)?\n");
+		czarik = getch();
+		
+		if(czarik=='c')mainCodeMessage();
+		if(czarik=='u')mainUncodeMessage();
+		czarik = ' ';
+		sleep(1);
+	}
+		//goto loopLabel;
 
 }
 
