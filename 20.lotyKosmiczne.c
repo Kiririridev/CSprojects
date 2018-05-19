@@ -137,14 +137,14 @@ void createGalaxy(struct Planet* pPlanetTable, char* pNameTable)
 */
 void getUserCoords(int* userCoords)
 {
-	printf("\nKosmonauto, wprowadz swoje koordynaty startowe oraz docelowe.\n");
+	printf("Kosmonauto, wprowadz swoje koordynaty startowe oraz docelowe.\n");
 	printf("Kordynaty startowe w postaci XX YY ZZ:\n");
 	scanf("%d %d %d", userCoords, (userCoords + 1), (userCoords + 2));
 	
 	printf("Koordynaty docelowe w postaci XX YY ZZ:\n");
 	scanf("%d %d %d", (userCoords + 3), (userCoords + 4), (userCoords + 5));
 	
-	printf("\nKoordynaty przyjeto.");
+	printf("\nKoordynaty przyjeto.\n");
 }
 
 /*
@@ -238,12 +238,32 @@ int checkPlanetOnPath(float pathwayX, float pathwayY, float pathwayZ, struct Pla
 
 
 
-//=========================START=============================
+//=========================================================START=============================================================
 void start()
 {
 	char nameTable[10][2];
 	char *pNameTable = &nameTable[0][0];
+	
 	nameTableInitializator(pNameTable);
+	
+	int amountOfPoints = 10;
+	float pathway[amountOfPoints][3];
+	float *pPathway = &pathway[0][0]; 
+	
+	int *userCoords = malloc(6 * sizeof(int)); 
+	
+
+	struct Planet* pPlanetList = malloc(10* sizeof(struct Planet));
+
+	
+	createGalaxy(pPlanetList, pNameTable);
+
+	getUserCoords(userCoords);
+	generatePathway(userCoords, amountOfPoints, pPathway);
+	
+	checkPathway(pathway, amountOfPoints, pPlanetList);
+	
+	
 }
 
 //=========================TESTY===========================
@@ -292,6 +312,8 @@ int main()
 {
 	
 	srand(time(NULL));
-	testy();
+	
+	start();
+	//testy();
 	
 }
