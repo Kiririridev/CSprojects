@@ -1,22 +1,36 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<time.h>
+#include<conio.h>
 
-#define filePath "randomNumbers.txt"
-#define amountOfNumbers 100000
+#define filePath "daneRand.txt"
+#define filePathOrder "dane.txt"
+#define amountOfNumbers 10000000
 #define testAmount 10
 
 void generateRandomNumbToText(int amount, int max);
 void swap(int* a, int *b);
-void bubbleSort(int tab[], int amount);
+
 void printTab(int tab[], int amount);
 void printTabFromPointer(int* tab, int amount);
 void readTabFromFile(int *tab, int amount);
+void readTabFromFileOrder(int *tab, int amount);
+void readTabFromFileReverseOrder(int *tab, int amount);
 
-void insertionort(int tab[], int amount);
-void selectionort(int tab[], int amount);
+
+void navigation();
+void groupOne(int amount, char dataType);
+void groupTwo(int amount, char dataType);
+
+
+
+void bubbleSort(int tab[], int amount);
+void insertionSort(int tab[], int amount);
+void selectionSort(int tab[], int amount);
+
 void quicksort(int* tab, int start, int end);
 int partitionQS(int* tab, int start, int end);
+
 void shellSort(int tab[], int amount);
 
 void heapify(int tab[], int amount, int i);
@@ -27,14 +41,21 @@ int main()
 {
 	srand(time(NULL));
 	
-	//generateRandomNumbToText(amountOfNumbers, 1000);
 	
-	int testTab[testAmount] = {2, 5 , 5, 7, 4, 7, 1, 9, 2, 8};
-	int* pTestTab = &testTab[0];
+	//generateRandomNumbToText(amountOfNumbers, 200);
 	
-	int tab[amountOfNumbers];
-	int *pTab = &tab[0];
-	readTabFromFile(pTab, amountOfNumbers);
+	
+	navigation();
+	
+	
+	//int testTab[testAmount] = {2, 5 , 5, 7, 4, 7, 1, 9, 2, 8};
+	//int* pTestTab = &testTab[0];
+	
+	//int tab[amountOfNumbers];
+	//int *pTab = &tab[0];
+	//readTabFromFile(pTab, amountOfNumbers);
+	
+	//int timeBegin = time(NULL);
 	
 	//printTab(tab, amountOfNumbers);
 	
@@ -42,15 +63,270 @@ int main()
 	//insertionSort(tab, amountOfNumbers);
 	//selectionSort(tab, amountOfNumbers);
 	
-	//quicksort(pTestTab, 0, testAmount);
+	//quicksort(pTab, 0, amountOfNumbers);
 	
-	//shellSort(testTab, testAmount);
+	//shellSort(tab, amountOfNumbers);
 	
-	heapSort(testTab, testAmount);
-	printTabFromPointer(pTestTab, testAmount);
+	//heapSort(tab, amountOfNumbers);
+	
+	//int timeEnd = time(NULL);
+	
+	//printf("%d\n", timeEnd - timeBegin);
+	
+	//printTab(tab, amountOfNumbers);
+	//printTabFromPointer(pTestTab, testAmount);
 	
 	
 }
+
+void navigation()
+{
+	int numbs, algorithms;
+	char dataType;
+	printf("Witam w programie liczacym czasu sortowañ.\n");
+	printf("Wybierz iloœæ liczb do sortowania(max 100000)\n");
+	//scanf("%d", &numbs);
+	
+	printf("Wybierz grupê algorytmów: 1 - insertion, bubble, selection; 2 - quick, shell, heap\n");
+	//scanf("%d", &algorithms);
+	
+	printf("Wybierz typ danych: a- losowe, b - odwrotnie posortowane, c - posortowane\n");
+	scanf("%d %d %c", &numbs, &algorithms, &dataType);
+	
+	
+	printf("\n %d  %d   %c", numbs, algorithms, dataType);
+	if(algorithms == 2)
+	{
+		printf("wtf?1\n");
+		groupTwo(numbs, dataType);
+		printf("wtf?2\n");
+	}
+	
+	if(algorithms == 1)
+	{
+		groupOne(numbs, dataType);
+	}
+
+}
+
+void groupOne(int amount, char dataType)
+{
+		int tab[amount];
+		int* pTab = &tab[0];
+		int beginTime, endTime;
+	
+	if(dataType == 'a')
+	{
+		
+		
+		readTabFromFile(pTab, amount);
+		
+		beginTime = time(NULL);
+		insertionSort(tab, amount);
+		endTime = time(NULL);
+		
+		printf("InsertionSort: %d seconds.\n", endTime - beginTime);
+		
+		
+		
+		readTabFromFile(pTab, amount);
+		
+		beginTime = time(NULL);
+		bubbleSort(tab, amount);
+		endTime = time(NULL);
+		
+		printf("BubbleSort: %d seconds.\n", endTime - beginTime);
+		
+		
+		
+		readTabFromFile(pTab, amount);
+		
+		beginTime = time(NULL);
+		selectionSort(tab, amount);
+		endTime = time(NULL);
+		
+		printf("SelectionSort: %d seconds.\n", endTime - beginTime);
+		
+		
+		
+	}else if(dataType == 'b')
+	{
+
+		
+		readTabFromFileReverseOrder(pTab, amount);
+		
+		beginTime = time(NULL);
+		insertionSort(tab, amount);
+		endTime = time(NULL);
+		
+		printf("InsertionSort: %d seconds.\n", endTime - beginTime);
+		
+		
+		
+		readTabFromFileReverseOrder(pTab, amount);
+		
+		beginTime = time(NULL);
+		bubbleSort(tab, amount);
+		endTime = time(NULL);
+		
+		printf("BubbleSort: %d seconds.\n", endTime - beginTime);
+		
+		
+		
+		readTabFromFileReverseOrder(pTab, amount);
+		
+		beginTime = time(NULL);
+		selectionSort(tab, amount);
+		endTime = time(NULL);
+		
+		printf("SelectionSort: %d seconds.\n", endTime - beginTime);
+		
+		
+		
+		
+	}else if(dataType == 'c')
+	{
+
+		readTabFromFileOrder(pTab, amount);
+		
+		beginTime = time(NULL);
+		insertionSort(tab, amount);
+		endTime = time(NULL);
+		
+		printf("InsertionSort: %d seconds.\n", endTime - beginTime);
+		
+		
+		
+		readTabFromFileOrder(pTab, amount);
+		
+		beginTime = time(NULL);
+		bubbleSort(tab, amount);
+		endTime = time(NULL);
+		
+		printf("BubbleSort: %d seconds.\n", endTime - beginTime);
+		
+		
+		
+		readTabFromFileOrder(pTab, amount);
+		
+		beginTime = time(NULL);
+		selectionSort(tab, amount);
+		endTime = time(NULL);
+		
+		printf("SelectionSort: %d seconds.\n", endTime - beginTime);
+	}
+}
+
+void groupTwo(int amount, char dataType)
+{
+	int tab[amount];
+	int* pTab = &tab[0];
+	int beginTime, endTime;
+	printf("group2\n");
+	
+	if(dataType == 'a')
+	{
+		
+		
+		readTabFromFile(pTab, amount);
+		
+		beginTime = time(NULL);
+		quicksort(pTab, 0, amount);
+		endTime = time(NULL);
+		
+		printf("quicksort: %d seconds.\n", endTime - beginTime);
+		
+		
+		
+		readTabFromFile(pTab, amount);
+		
+		beginTime = time(NULL);
+		shellSort(tab, amount);
+		endTime = time(NULL);
+		
+		printf("shellsort: %d seconds.\n", endTime - beginTime);
+		
+		
+		
+		readTabFromFile(pTab, amount);
+		
+		beginTime = time(NULL);
+		heapSort(tab, amount);
+		endTime = time(NULL);
+		
+		printf("heapsort: %d seconds.\n", endTime - beginTime);
+		
+		
+		
+	}else if(dataType == 'b')
+	{
+		
+		readTabFromFileReverseOrder(pTab, amount);
+		
+		beginTime = time(NULL);
+		quicksort(pTab, 0, amount-1);
+		endTime = time(NULL);
+		
+		printf("quicksort: %d seconds.\n", endTime - beginTime);
+		
+		
+		
+		readTabFromFileReverseOrder(pTab, amount);
+		
+		beginTime = time(NULL);
+		shellSort(tab, amount);
+		endTime = time(NULL);
+		
+		printf("shellsort: %d seconds.\n", endTime - beginTime);
+		
+		
+		
+		readTabFromFileReverseOrder(pTab, amount);
+		
+		beginTime = time(NULL);
+		heapSort(tab, amount);
+		endTime = time(NULL);
+		
+		printf("heapsort: %d seconds.\n", endTime - beginTime);
+		
+		
+		
+		
+	}else if(dataType == 'c')
+	{
+
+		
+		readTabFromFileOrder(pTab, amount);
+		
+		beginTime = time(NULL);
+		quicksort(pTab, 0, amount);
+		endTime = time(NULL);
+		
+		printf("quicksort: %d seconds.\n", endTime - beginTime);
+		
+		
+		
+		readTabFromFileOrder(pTab, amount);
+		
+		beginTime = time(NULL);
+		shellSort(tab, amount);
+		endTime = time(NULL);
+		
+		printf("shellsort: %d seconds.\n", endTime - beginTime);
+		
+		
+		
+		readTabFromFileOrder(pTab, amount);
+		
+		beginTime = time(NULL);
+		heapSort(tab, amount);
+		endTime = time(NULL);
+		
+		printf("heapsort: %d seconds.\n", endTime - beginTime);
+	}
+}
+
+
 
 void generateRandomNumbToText(int amount, int max)
 {
@@ -58,19 +334,60 @@ void generateRandomNumbToText(int amount, int max)
 	
 	for(int i = 0; i<amount; i++)
 	{
-		fprintf(file, "%d ", (rand()%max));
+		fprintf(file, "%d ", (rand()%max)-100);
 	}
 	
 	fclose(file);
 }
 
+void generateOrderNumbToText(int amount)
+{
+	FILE* file = fopen(filePathOrder, "w");
+	int step = 200/amount;
+	
+	for(int i = 0; i<amount; i++)
+	{
+		fprintf(file, "%d ", (step * i)-100);
+	}
+	
+}
+
+
 void readTabFromFile(int *tab, int amount)
 {
 	FILE* file = fopen(filePath, "r");
 	
+	if(file==NULL) printf("nullik");
+	
 	for(int i= 0; i<amount; i++)
 	{
 		fscanf(file, "%d", (tab+i));
+	}
+	
+	
+	fclose(file);
+}
+
+void readTabFromFileOrder(int *tab, int amount)
+{
+	FILE* file = fopen(filePathOrder, "r");
+	
+	for(int i= 0; i<amount; i++)
+	{
+		fscanf(file, "%d", (tab+i));
+	}
+	
+	
+	fclose(file);
+}
+
+void readTabFromFileReverseOrder(int *tab, int amount)
+{
+	FILE* file = fopen(filePathOrder, "r");
+	
+	for(int i= 0; i<amount; i++)
+	{
+		fscanf(file, "%d", (tab + amount - i -1));
 	}
 	
 	
@@ -115,7 +432,6 @@ void bubbleSort(int tab[], int amount)
 		sortedBorder--;
 	}
 	
-	printTab(tab, amount);
 }
 
 void insertionSort(int tab[], int amount)
@@ -135,7 +451,6 @@ void insertionSort(int tab[], int amount)
 		tab[j] = value;
 	}
 	
-	printTab(tab, amount);
 }
 
 void selectionSort(int tab[], int amount)
@@ -161,7 +476,6 @@ void selectionSort(int tab[], int amount)
 		swap(&tab[min], &tab[i]);
 	}
 	
-	printTab(tab, amount);
 }
 
 void quicksort(int *tab, int start, int end)
@@ -267,3 +581,4 @@ void heapSort(int tab[], int amount)
 		heapify(tab, i, 0);
 	}
 }
+
